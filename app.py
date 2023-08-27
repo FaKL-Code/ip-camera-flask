@@ -3,9 +3,8 @@ import cv2
 
 app = Flask(__name__)
 
-camera = cv2.VideoCapture(0)
-
 def gen_frames():  
+    camera = cv2.VideoCapture(0)
     while True:
         success, frame = camera.read()  
         if not success:
@@ -16,7 +15,7 @@ def gen_frames():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  
 
-port_number = 5001
+port_number = 5000
 
 @app.route('/')
 def index():
@@ -27,4 +26,4 @@ def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == "__main__":
-    app.run(debug=True, port=port_number)
+    app.run(debug=False, port=port_number, host='0.0.0.0')
